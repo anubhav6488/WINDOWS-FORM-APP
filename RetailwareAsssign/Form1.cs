@@ -104,5 +104,52 @@ namespace RetailwareAssign
 				}
 			}
 		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+			string connectionstring = "Data Source=INF3CTED\\MSSQLSERVERS;Initial Catalog=MyDB;Integrated Security=True;TrustServerCertificate=True";
+
+			using (SqlConnection con = new SqlConnection(connectionstring))
+			{
+				try
+				{
+					con.Open();
+					MessageBox.Show("Connection Open!");
+
+					// Define your SELECT query
+					string selectQuery = "SELECT FirstName, SecondName FROM dbo.Names";
+
+					using (SqlCommand cmd = new SqlCommand(selectQuery, con))
+					{
+						// Create a SqlDataReader to read data from the database
+						using (SqlDataReader reader = cmd.ExecuteReader())
+						{
+							// Check if the SqlDataReader has rows
+							if (reader.HasRows)
+							{
+								// Iterate through the rows and display data
+								while (reader.Read())
+								{
+									string firstName = reader.GetString(0); // Assuming FirstName is of type string (index 0)
+									string secondName = reader.GetString(1); // Assuming SecondName is of type string (index 1)
+
+									// Display or process the fetched data
+									MessageBox.Show($"FirstName: {firstName}, SecondName: {secondName}");
+								}
+							}
+							else
+							{
+								MessageBox.Show("No rows found.");
+							}
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show("Cannot open connection or execute query! " + ex.Message);
+				}
+			}
+		}
+
 	}
 }
